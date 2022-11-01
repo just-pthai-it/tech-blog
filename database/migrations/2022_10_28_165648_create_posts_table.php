@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('title', 200);
             $table->text('content');
-            $table->unsignedTinyInteger('mode');
+            $table->unsignedTinyInteger('mode')->default(0);
             $table->unsignedMediumInteger('view_count');
             $table->unsignedMediumInteger('like_count');
             $table->unsignedMediumInteger('share_count');
