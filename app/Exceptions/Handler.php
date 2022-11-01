@@ -6,6 +6,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use function App\Helpers\failedResponse;
+use const App\Helpers\HTTP_STATUS_CODE_BAD_REQUEST;
 
 class Handler extends ExceptionHandler
 {
@@ -44,7 +45,12 @@ class Handler extends ExceptionHandler
         $this->renderable(function (ValidationException $exception)
         {
             return failedResponse($exception->validator->errors()->messages(),
-                                  $exception->getMessage());
+                                  $exception->getMessage(), HTTP_STATUS_CODE_BAD_REQUEST);
+        });
+
+        $this->renderable(function (Throwable $exception)
+        {
+            return failedResponse();
         });
 
         $this->reportable(function (Throwable $e)

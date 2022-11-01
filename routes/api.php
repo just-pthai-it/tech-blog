@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,5 +29,5 @@ Route::group(['middleware' => ['default.headers']], function ()
 
 Route::group(['middleware' => ['default.headers', 'auth:sanctum']], function ()
 {
-
+    Route::apiResource('posts', PostController::class);
 });
