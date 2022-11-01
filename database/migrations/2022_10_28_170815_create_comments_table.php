@@ -16,9 +16,8 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
             $table->text('content');
-            $table->unsignedMediumInteger('like_count');
-            $table->unsignedMediumInteger('share_count');
-            $table->unsignedMediumInteger('trending_point');
+            $table->unsignedMediumInteger('like_count')->default(0);
+            $table->unsignedMediumInteger('share_count')->default(0);
             $table->morphs('reply');
             $table->unsignedMediumInteger('user_id');
             $table->timestamps();

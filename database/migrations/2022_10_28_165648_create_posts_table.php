@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('title', 500);
             $table->text('content');
             $table->unsignedTinyInteger('mode')->default(0);
-            $table->unsignedMediumInteger('view_count');
-            $table->unsignedMediumInteger('like_count');
-            $table->unsignedMediumInteger('share_count');
-            $table->unsignedMediumInteger('trending_point');
+            $table->unsignedMediumInteger('view_count')->default(0);
+            $table->unsignedMediumInteger('like_count')->default(0);
+            $table->unsignedMediumInteger('share_count')->default(0);
+            $table->unsignedMediumInteger('trending_point')->default(0);
             $table->unsignedMediumInteger('user_id');
-            $table->timestamps();;
+            $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
         });
