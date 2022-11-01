@@ -22,8 +22,10 @@ return new class extends Migration
             $table->unsignedMediumInteger('like_count');
             $table->unsignedMediumInteger('share_count');
             $table->unsignedMediumInteger('trending_point');
+            $table->unsignedMediumInteger('user_id');
             $table->timestamps();;
             $table->timestamp('deleted_at')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
