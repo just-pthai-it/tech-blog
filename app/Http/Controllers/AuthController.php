@@ -11,6 +11,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
+use const App\Helpers\HTTP_STATUS_CODE_CREATED;
 use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED;
 use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED_THIRD_PARTY;
 
@@ -80,6 +81,6 @@ class AuthController extends Controller
             'user'        => $this->userDTO->format($user),
             'accessToken' => $accessToken,
         ];
-        return successfulResponse($data);
+        return successfulResponse($data, '', HTTP_STATUS_CODE_CREATED);
     }
 }
