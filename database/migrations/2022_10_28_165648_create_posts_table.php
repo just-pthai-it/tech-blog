@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->string('name', 100);
-            $table->string('title', 200);
+            $table->string('title', 500);
             $table->text('content');
             $table->unsignedTinyInteger('mode')->default(0);
             $table->unsignedMediumInteger('view_count');
