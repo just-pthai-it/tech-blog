@@ -14,7 +14,7 @@ class GenerateAdmin extends Command
      *
      * @var string
      */
-    protected $signature = 'command:generate-admin {name} {nickname} {email} {password}';
+    protected $signature = 'generate:admin {name} {nickname} {email} {password}';
 
     /**
      * The console command description.
