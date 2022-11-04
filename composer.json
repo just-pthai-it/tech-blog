@@ -10,6 +10,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
+        "laravel/socialite": "^5.5",
         "laravel/tinker": "^2.7"
     },
     "require-dev": {
@@ -28,7 +29,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/common.php"
+            "app/Helpers/common.php",
+            "app/Helpers/consts.php"
         ]
     },
     "autoload-dev": {
