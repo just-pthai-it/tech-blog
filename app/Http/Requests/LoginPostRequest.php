@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use const App\Helpers\ALLOWED_THIRD_PARTY;
 
 class LoginPostRequest extends FormRequest
 {
