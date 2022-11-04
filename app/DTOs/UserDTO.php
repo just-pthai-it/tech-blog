@@ -20,6 +20,9 @@ class UserDTO
             'followerCount'  => $user->follower_count,
             'followingCount' => $user->following_count,
             'trendingPoint'  => $user->trending_point,
+            'githubEmail'    => $user->github_email,
+            'facebookEmail'  => $user->facebook_email,
+            'googleEmail'    => $user->google_email,
         ];
     }
 }

@@ -21,21 +21,11 @@ class RegisterPostRequest extends FormRequest
      */
     public function rules () : array
     {
-        $rules = [
+        return [
             'name'     => ['required', 'string'],
             'nickname' => ['required', 'string'],
             'email'    => ['required', 'string', 'email:rfc,dns'],
+            'password' => ['required', 'string'],
         ];
-
-        if ($this->route('option') == 'third-party')
-        {
-            return array_merge($rules, [
-                'github'   => ['required_without_all:facebook,google', 'string'],
-                'facebook' => ['required_without_all:github,google', 'string'],
-                'google'   => ['required_without_all:facebook,github', 'string'],
-            ]);
-        }
-
-        return array_merge($rules, ['password' => ['required', 'string'],]);
     }
 }

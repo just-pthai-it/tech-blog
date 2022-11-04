@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\DTOs\UserDTO;
+use Illuminate\Support\Str;
 use Illuminate\Http\Response;
 use App\Http\Requests\LoginPostRequest;
+use Laravel\Socialite\Facades\Socialite;
 use App\Http\Requests\RegisterPostRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -13,7 +15,6 @@ use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
 use const App\Helpers\HTTP_STATUS_CODE_CREATED;
 use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED;
-use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED_THIRD_PARTY;
 
 class AuthController extends Controller
 {
@@ -24,56 +25,37 @@ class AuthController extends Controller
      */
     public function __construct (UserDTO $userDTO) { $this->userDTO = $userDTO; }
 
-
     public function login (LoginPostRequest $request,
-                           ?string          $option = null) : Response|Application|ResponseFactory
+                           ?string          $thirdParty = null) : Response|Application|ResponseFactory
     {
-        if ($option == 'third-party')
+        if ($thirdParty == null)
         {
-            $user = User::where('github', $request->third_party_id)
-                        ->orWhere('facebook', $request->third_party_id)
-                        ->orWhere('google', $request->third_party_id)->first();
-            if ($user == null)
+            if (auth()->attempt($request->validated()))
             {
-                $data = ['redirectUrl' => route('register', ['option' => 'third-party'])];
-                return failedResponse($data, '', HTTP_STATUS_CODE_UNAUTHORIZED_THIRD_PARTY);
+                $accessToken = auth()->user()->createToken('access_token')->plainTextToken;
+                $data        = [
+                    'user'        => $this->userDTO->format(auth()->user()),
+                    'accessToken' => $accessToken,
+                ];
+
+                return successfulResponse($data);
             }
-
-            $accessToken = $user->createToken('access_token')->plainTextToken;
-            $data        = [
-                'user'        => $this->userDTO->format($user),
-                'accessToken' => $accessToken,
-            ];
-            return successfulResponse($data);
+            else
+            {
+                return failedResponse([], '', HTTP_STATUS_CODE_UNAUTHORIZED);
+            }
         }
 
-        if (auth()->attempt($request->validated()))
+        $thirdPartyUser = Socialite::driver($thirdParty)->userFromToken($request->token);
+        $user           = User::where('github_email', $thirdPartyUser->email)
+                              ->orWhere('facebook_email', $thirdPartyUser->email)
+                              ->orWhere('google_email', $thirdPartyUser->email)->first();
+
+        if ($user == null)
         {
-            $accessToken = auth()->user()->createToken('access_token')->plainTextToken;
-            $data        = [
-                'user'        => $this->userDTO->format(auth()->user()),
-                'accessToken' => $accessToken,
-            ];
-
-            return successfulResponse($data);
-        }
-
-        return failedResponse([], '', HTTP_STATUS_CODE_UNAUTHORIZED);
-    }
-
-    public function register (RegisterPostRequest $request,
-                              ?string             $option = null) : Response|Application|ResponseFactory
-    {
-        if ($option == 'third-party')
-        {
-            $user = User::create($request->validated());
-        }
-        else
-        {
-            $inputs             = $request->validated();
-            $inputs['password'] = bcrypt($inputs['password']);
-
-            $user = User::create($inputs);
+            $nickname = explode('@', $thirdPartyUser->email)[0] . '-' . Str::random(10);
+            $user     = User::create(['nickname'            => $nickname,
+                                      "{$thirdParty}_email" => $thirdPartyUser->email]);
         }
 
         $accessToken = $user->createToken('access_token')->plainTextToken;
@@ -81,6 +63,22 @@ class AuthController extends Controller
             'user'        => $this->userDTO->format($user),
             'accessToken' => $accessToken,
         ];
+
+        return successfulResponse($data);
+    }
+
+    public function register (RegisterPostRequest $request) : Response|Application|ResponseFactory
+    {
+        $inputs             = $request->validated();
+        $inputs['password'] = bcrypt($inputs['password']);
+        $user               = User::create($inputs);
+
+        $accessToken = $user->createToken('access_token')->plainTextToken;
+        $data        = [
+            'user'        => $this->userDTO->format($user),
+            'accessToken' => $accessToken,
+        ];
+
         return successfulResponse($data, '', HTTP_STATUS_CODE_CREATED);
     }
 }

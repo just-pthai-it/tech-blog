@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
+use const App\Helpers\ALLOWED_THIRD_PARTY;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request)
 
 Route::group(['middleware' => ['default.headers']], function ()
 {
-    Route::post('login/{option?}', [AuthController::class, 'login'])->name('login');
-    Route::post('register/{option?}', [AuthController::class, 'register'])->name('register');
+    Route::post('login/{third_party?}', [AuthController::class, 'login'])->name('login')
+    ->where(['third_party' => implode('|', ALLOWED_THIRD_PARTY)]);
+    Route::post('register', [AuthController::class, 'register'])->name('register');
 });
 
 Route::group(['middleware' => ['default.headers', 'auth:sanctum']], function ()

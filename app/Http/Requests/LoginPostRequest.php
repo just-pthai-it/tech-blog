@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use const App\Helpers\ALLOWED_THIRD_PARTY;
 
 class LoginPostRequest extends FormRequest
 {
@@ -21,17 +22,16 @@ class LoginPostRequest extends FormRequest
      */
     public function rules () : array
     {
-        return match ($this->route('option'))
+        if ($this->route('third_party') == null)
         {
-            'third-party' => [
-                'third_party_id' => ['required', 'string']
-            ],
-
-            default => [
+            return [
                 'email'    => ['required', 'string', 'email:rfc,dns'],
                 'password' => ['required', 'string']
-            ],
-        };
-
+            ];
+        }
+        else
+        {
+            return ['token' => ['required', 'string']];
+        }
     }
 }

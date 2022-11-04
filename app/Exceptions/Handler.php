@@ -50,6 +50,11 @@ class Handler extends ExceptionHandler
 
         $this->renderable(function (Throwable $exception)
         {
+            if (config('app.debug'))
+            {
+                return failedResponse([], $exception->getMessage());
+            }
+
             return failedResponse();
         });
 
