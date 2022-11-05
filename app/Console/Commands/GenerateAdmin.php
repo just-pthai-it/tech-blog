@@ -2,10 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
+use const App\Helpers\ROLES;
 
 class GenerateAdmin extends Command
 {
@@ -28,11 +29,12 @@ class GenerateAdmin extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle() : int
     {
         $inputs = $this->arguments();
         $inputs['password'] = bcrypt($inputs['password']);
-        Admin::create(Arr::except($inputs, ['command']));
+        $inputs['role'] = ROLES['admin'];
+        User::create(Arr::except($inputs, ['command']));
 
         return CommandAlias::SUCCESS;
     }
