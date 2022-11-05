@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\DTOs\UserDTO;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Response;
-use App\Http\Requests\LoginPostRequest;
 use Laravel\Socialite\Facades\Socialite;
-use App\Http\Requests\RegisterPostRequest;
+use App\Http\Requests\Auth\LoginPostRequest;
+use App\Http\Requests\Auth\RegisterPostRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
+use const App\Helpers\ROLES;
 use const App\Helpers\HTTP_STATUS_CODE_CREATED;
 use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED;
 
@@ -30,7 +32,9 @@ class AuthController extends Controller
     {
         if ($thirdParty == null)
         {
-            if (auth()->attempt($request->validated()))
+            if (auth()->attempt(array_merge($request->validated(),
+                                            ['role' => Arr::only(ROLES,
+                                                                 ['normal_user', 'premium_user'])])))
             {
                 $accessToken = auth()->user()->createToken('access_token')->plainTextToken;
                 $data        = [
@@ -40,10 +44,8 @@ class AuthController extends Controller
 
                 return successfulResponse($data);
             }
-            else
-            {
-                return failedResponse([], '', HTTP_STATUS_CODE_UNAUTHORIZED);
-            }
+
+            return failedResponse([], '', HTTP_STATUS_CODE_UNAUTHORIZED);
         }
 
         $thirdPartyUser = Socialite::driver($thirdParty)->userFromToken($request->token);

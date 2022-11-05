@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginPostRequest extends FormRequest
+class RegisterPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,16 +21,11 @@ class LoginPostRequest extends FormRequest
      */
     public function rules () : array
     {
-        if ($this->route('third_party') == null)
-        {
-            return [
-                'email'    => ['required', 'string', 'email:rfc,dns'],
-                'password' => ['required', 'string']
-            ];
-        }
-        else
-        {
-            return ['token' => ['required', 'string']];
-        }
+        return [
+            'name'     => ['required', 'string'],
+            'nickname' => ['required', 'string'],
+            'email'    => ['required', 'string', 'email:rfc,dns'],
+            'password' => ['required', 'string'],
+        ];
     }
 }
