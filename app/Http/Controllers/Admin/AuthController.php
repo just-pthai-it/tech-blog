@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\DTOs\UserDTO;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Http\Requests\Admin\Auth\LoginPostRequest;
 use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
@@ -20,7 +23,7 @@ class AuthController extends Controller
      */
     public function __construct (UserDTO $userDTO) { $this->userDTO = $userDTO; }
 
-    public function login (LoginPostRequest $request)
+    public function login (LoginPostRequest $request) : Response|Application|ResponseFactory
     {
         if (auth()->attempt(array_merge($request->validated(),
                                         ['role' => Arr::only(ROLES,
