@@ -9,10 +9,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Http\Requests\Admin\Auth\LoginPostRequest;
+use App\Http\Requests\Admin\Auth\LogoutPostRequest;
 use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
 use const App\Helpers\ROLES;
-use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED;
+use const App\Helpers\HTTP_STATUS_CODE_UNAUTHENTICATED;
 
 class AuthController extends Controller
 {
@@ -38,6 +39,19 @@ class AuthController extends Controller
             return successfulResponse($data);
         }
 
-        return failedResponse([], '', HTTP_STATUS_CODE_UNAUTHORIZED);
+        return failedResponse([], '', HTTP_STATUS_CODE_UNAUTHENTICATED);
+    }
+
+    public function logout (LogoutPostRequest $request) : Response|Application|ResponseFactory
+    {
+        $user = auth()->user();
+        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+        return successfulResponse();
+    }
+
+    public function logoutAll (LogoutPostRequest $request) : Response|Application|ResponseFactory
+    {
+        auth()->user()->tokens()->delete();
+        return successfulResponse();
     }
 }

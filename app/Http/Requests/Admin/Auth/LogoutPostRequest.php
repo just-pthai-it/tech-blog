@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Admin\Auth;
 
+use Illuminate\Support\Arr;
 use Illuminate\Foundation\Http\FormRequest;
+use const App\Helpers\ROLES;
 
-class LoginPostRequest extends FormRequest
+class LogoutPostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -12,7 +14,7 @@ class LoginPostRequest extends FormRequest
      */
     public function authorize () : bool
     {
-        return true;
+        return in_array($this->user()->role, Arr::only(ROLES, ['admin', 'mod']));
     }
 
     /**
@@ -21,9 +23,6 @@ class LoginPostRequest extends FormRequest
      */
     public function rules () : array
     {
-        return [
-            'email'    => ['required', 'string'],
-            'password' => ['required', 'string'],
-        ];
+        return [];
     }
 }

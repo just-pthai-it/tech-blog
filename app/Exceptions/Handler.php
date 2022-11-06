@@ -2,11 +2,15 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use function App\Helpers\failedResponse;
 use const App\Helpers\HTTP_STATUS_CODE_BAD_REQUEST;
+use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED;
+use const App\Helpers\HTTP_STATUS_CODE_UNAUTHENTICATED;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +50,16 @@ class Handler extends ExceptionHandler
         {
             return failedResponse($exception->validator->errors()->messages(),
                                   $exception->getMessage(), HTTP_STATUS_CODE_BAD_REQUEST);
+        });
+
+        $this->renderable(function (AuthenticationException $exception)
+        {
+            return failedResponse([], $exception->getMessage(), HTTP_STATUS_CODE_UNAUTHENTICATED);
+        });
+
+        $this->renderable(function (AuthorizationException $exception)
+        {
+            return failedResponse([], $exception->getMessage(), HTTP_STATUS_CODE_UNAUTHORIZED);
         });
 
         $this->renderable(function (Throwable $exception)

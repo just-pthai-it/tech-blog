@@ -31,5 +31,8 @@ Route::group(['middleware' => ['default.headers']], function ()
 
 Route::group(['middleware' => ['default.headers', 'auth:sanctum']], function ()
 {
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('logout/all', [AuthController::class, 'logoutAll'])->name('logout_all');
+
     Route::apiResource('posts', PostController::class);
 });

@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Http\Response;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Requests\Auth\LoginPostRequest;
+use App\Http\Requests\Auth\LogoutPostRequest;
 use App\Http\Requests\Auth\RegisterPostRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -16,7 +17,7 @@ use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
 use const App\Helpers\ROLES;
 use const App\Helpers\HTTP_STATUS_CODE_CREATED;
-use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED;
+use const App\Helpers\HTTP_STATUS_CODE_UNAUTHENTICATED;
 
 class AuthController extends Controller
 {
@@ -45,7 +46,7 @@ class AuthController extends Controller
                 return successfulResponse($data);
             }
 
-            return failedResponse([], '', HTTP_STATUS_CODE_UNAUTHORIZED);
+            return failedResponse([], '', HTTP_STATUS_CODE_UNAUTHENTICATED);
         }
 
         $thirdPartyUser = Socialite::driver($thirdParty)->userFromToken($request->token);
@@ -82,5 +83,18 @@ class AuthController extends Controller
         ];
 
         return successfulResponse($data, '', HTTP_STATUS_CODE_CREATED);
+    }
+
+    public function logout (LogoutPostRequest $request) : Response|Application|ResponseFactory
+    {
+        $user = auth()->user();
+        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+        return successfulResponse();
+    }
+
+    public function logoutAll (LogoutPostRequest $request) : Response|Application|ResponseFactory
+    {
+        auth()->user()->tokens()->delete();
+        return successfulResponse();
     }
 }

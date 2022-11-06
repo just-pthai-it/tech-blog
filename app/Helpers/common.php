@@ -9,13 +9,14 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 const RESPONSE_STATUS_SUCCESSFUL = 1;
 const RESPONSE_STATUS_FAILED     = 0;
 
-const HTTP_STATUS_CODE_OK                       = 200;
-const HTTP_STATUS_CODE_CREATED                  = 201;
-const HTTP_STATUS_CODE_BAD_REQUEST              = 400;
-const HTTP_STATUS_CODE_UNAUTHORIZED             = 401;
-const HTTP_STATUS_CODE_NOT_FOUND                = 404;
-const HTTP_STATUS_CODE_UNPROCESSABLE            = 422;
-const HTTP_STATUS_CODE_SYSTEM_ERROR             = 500;
+const HTTP_STATUS_CODE_OK              = 200;
+const HTTP_STATUS_CODE_CREATED         = 201;
+const HTTP_STATUS_CODE_BAD_REQUEST     = 400;
+const HTTP_STATUS_CODE_UNAUTHENTICATED = 401;
+const HTTP_STATUS_CODE_UNAUTHORIZED    = 403;
+const HTTP_STATUS_CODE_NOT_FOUND       = 404;
+const HTTP_STATUS_CODE_UNPROCESSABLE   = 422;
+const HTTP_STATUS_CODE_SYSTEM_ERROR    = 500;
 
 function successfulResponse (array $data = [], string $message = '',
                              int   $httpStatusCode = HTTP_STATUS_CODE_OK,
