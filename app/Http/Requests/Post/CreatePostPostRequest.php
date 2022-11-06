@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Post;
 
+use Illuminate\Support\Arr;
 use Illuminate\Foundation\Http\FormRequest;
+use const App\Helpers\ROLES;
 
 class CreatePostPostRequest extends FormRequest
 {
@@ -12,7 +14,7 @@ class CreatePostPostRequest extends FormRequest
      */
     public function authorize () : bool
     {
-        return true;
+        return in_array($this->user()->role, Arr::only(ROLES, ['normal_user', 'premium_user']));
     }
 
     /**
@@ -24,6 +26,7 @@ class CreatePostPostRequest extends FormRequest
         return [
             'title'   => ['required', 'string'],
             'content' => ['required', 'string'],
+            'mode'    => ['required', 'integer']
         ];
     }
 }

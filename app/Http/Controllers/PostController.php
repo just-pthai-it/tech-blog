@@ -7,8 +7,8 @@ use App\Models\Post;
 use App\DTOs\PostDTO;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Requests\CreatePostPostRequest;
-use App\Http\Requests\UpdatePostPatchRequest;
+use App\Http\Requests\Post\CreatePostPostRequest;
+use App\Http\Requests\Post\UpdatePostPatchRequest;
 use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
 use const App\Helpers\HTTP_STATUS_CODE_CREATED;
@@ -41,8 +41,8 @@ class PostController extends Controller
      */
     public function store (CreatePostPostRequest $request) : Response
     {
-        Post::create(array_merge($request->validated(), ['user_id' => auth()->user()->id]));
-        return successfulResponse([], '', HTTP_STATUS_CODE_CREATED);
+        $post = Post::create(array_merge($request->validated(), ['user_id' => auth()->user()->id]));
+        return successfulResponse(['id' => $post->id], '', HTTP_STATUS_CODE_CREATED);
     }
 
     /**
