@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\User;
+use App\Models\Post;
 use App\DTOs\UserDTO;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Requests\User\UpdateUserPatchRequest;
+use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
+use const App\Helpers\HTTP_STATUS_CODE_NOT_FOUND;
 
 class UserController extends Controller
 {
@@ -18,6 +23,8 @@ class UserController extends Controller
     public function __construct (UserDTO $userDTO)
     {
         $this->userDTO = $userDTO;
+
+        $this->middleware(['auth:sanctum'])->only('update', 'destroy');
 
         if (request()->route()->getName() == 'me')
         {
@@ -71,14 +78,22 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
+     * @param UpdateUserPatchRequest $request
+     * @param int                    $id
      *
      * @return Response
      */
-    public function update (Request $request, $id)
+    public function update (UpdateUserPatchRequest $request, int $id) : Response
     {
-        //
+        try
+        {
+            User::findOrFail($id)->update($request->validated());
+            return successfulResponse();
+        }
+        catch (Exception $exception)
+        {
+            return failedResponse([], 'Not found', HTTP_STATUS_CODE_NOT_FOUND);
+        }
     }
 
     /**
