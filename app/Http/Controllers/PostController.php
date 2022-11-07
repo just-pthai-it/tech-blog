@@ -21,7 +21,12 @@ class PostController extends Controller
     /**
      * @param PostDTO $postDTO
      */
-    public function __construct (PostDTO $postDTO) { $this->postDTO = $postDTO; }
+    public function __construct (PostDTO $postDTO)
+    {
+        $this->postDTO = $postDTO;
+
+        $this->middleware(['auth:sanctum'])->only(['store', 'update', 'destroy']);
+    }
 
     /**
      * Display a listing of the resource.

@@ -8,16 +8,14 @@ class PostDTO
 {
     public function format (Post $post)
     {
+        $userDTO = new UserDTO();
         return [
             'id'        => $post->id,
             'title'     => $post->title,
             'content'   => $post->content,
             'createdAt' => $post->created_at,
             'updateAt'  => $post->update_at,
-            'user'      => [
-                'id'   => $post->user->id,
-                'name' => $post->user->name,
-            ],
+            'user'      => $userDTO->formatAuthor($post->user),
         ];
     }
 }
