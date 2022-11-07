@@ -74,6 +74,7 @@ class AuthController extends Controller
     {
         $inputs             = $request->validated();
         $inputs['password'] = bcrypt($inputs['password']);
+        $inputs['nickname'] = Str::random(8) . time();
         $user               = User::create($inputs);
 
         $accessToken = $user->createToken('access_token')->plainTextToken;

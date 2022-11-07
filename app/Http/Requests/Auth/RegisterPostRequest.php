@@ -22,8 +22,6 @@ class RegisterPostRequest extends FormRequest
     public function rules () : array
     {
         return [
-            'name'     => ['required', 'string'],
-            'nickname' => ['required', 'string'],
             'email'    => ['required', 'string', 'email:rfc,dns'],
             'password' => ['required', 'string'],
         ];
