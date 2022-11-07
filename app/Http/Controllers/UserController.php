@@ -8,9 +8,13 @@ use App\Models\Post;
 use App\DTOs\UserDTO;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Http\Requests\User\UpdateUserPatchRequest;
 use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
+use const App\Helpers\HTTP_STATUS_CODE_OK;
+use const App\Helpers\HTTP_STATUS_CODE_REDIRECT;
 use const App\Helpers\HTTP_STATUS_CODE_NOT_FOUND;
 
 class UserController extends Controller
@@ -24,12 +28,18 @@ class UserController extends Controller
     {
         $this->userDTO = $userDTO;
 
-        $this->middleware(['auth:sanctum'])->only('update', 'destroy');
+        $this->middleware(['auth:sanctum'])->only('update', 'destroy', 'verify');
 
         if (request()->route()->getName() == 'me')
         {
             $this->middleware(['auth:sanctum'])->only(['show']);
         }
+    }
+
+    public function verify (Request $request, int $id) : Response|Application|ResponseFactory
+    {
+        $code = auth()->user()->name == null ? HTTP_STATUS_CODE_REDIRECT : HTTP_STATUS_CODE_OK;
+        return successfulResponse([], '', $code);
     }
 
     /**

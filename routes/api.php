@@ -39,6 +39,7 @@ Route::group(['middleware' => ['default.headers']], function ()
     });
 
     Route::get('me', [UserController::class, 'show'])->name('me');
+    Route::get('users/{user}/verify', [UserController::class, 'verify']);
 
     Route::apiResource('posts', PostController::class);
     Route::apiResource('users', UserController::class);
