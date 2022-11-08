@@ -14,8 +14,7 @@ class UpdateUserPatchRequest extends FormRequest
      */
     public function authorize () : bool
     {
-        return in_array($this->user()->role, Arr::only(ROLES, ['normal_user', 'premium_user'])) &&
-               $this->user()->id == $this->route('user');
+        return in_array($this->user()->role, Arr::only(ROLES, ['normal_user', 'premium_user']));
     }
 
     /**

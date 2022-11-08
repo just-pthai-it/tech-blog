@@ -82,7 +82,7 @@ class UserController extends Controller
             $user = User::findOrFail($id);
         }
 
-        return successfulResponse(['user' => $this->userDTO->format($user)]);
+        return successfulResponse(['user' => $this->userDTO->formatGet($user)]);
     }
 
     /**
@@ -97,7 +97,7 @@ class UserController extends Controller
     {
         try
         {
-            User::findOrFail($id)->update($request->validated());
+            auth()->user()->update($request->validated());
             return successfulResponse();
         }
         catch (Exception $exception)
