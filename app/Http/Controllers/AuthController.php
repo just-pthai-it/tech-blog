@@ -38,10 +38,9 @@ class AuthController extends Controller
                                                                  ['normal_user', 'premium_user'])])))
             {
                 $accessToken = auth()->user()->createToken('access_token')->plainTextToken;
-                $data        = [
-                    'user'        => $this->userDTO->format(auth()->user()),
-                    'accessToken' => $accessToken,
-                ];
+                $data        = array_merge($this->userDTO->formatLogin(auth()->user()),
+                                           ['accessToken' => $accessToken,]);
+
 
                 return successfulResponse($data);
             }
@@ -62,10 +61,7 @@ class AuthController extends Controller
         }
 
         $accessToken = $user->createToken('access_token')->plainTextToken;
-        $data        = [
-            'user'        => $this->userDTO->format($user),
-            'accessToken' => $accessToken,
-        ];
+        $data        = array_merge($this->userDTO->formatLogin($user), ['accessToken' => $accessToken,]);
 
         return successfulResponse($data);
     }
@@ -78,10 +74,7 @@ class AuthController extends Controller
         $user               = User::create($inputs);
 
         $accessToken = $user->createToken('access_token')->plainTextToken;
-        $data        = [
-            'user'        => $this->userDTO->format($user),
-            'accessToken' => $accessToken,
-        ];
+        $data        = array_merge($this->userDTO->formatLogin($user), ['accessToken' => $accessToken,]);
 
         return successfulResponse($data, '', HTTP_STATUS_CODE_CREATED);
     }

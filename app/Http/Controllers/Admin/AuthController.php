@@ -32,7 +32,7 @@ class AuthController extends Controller
         {
             $accessToken = auth()->user()->createToken('access_token')->plainTextToken;
             $data        = [
-                'user'        => $this->userDTO->format(auth()->user()),
+                'user'        => $this->userDTO->formatLogin(auth()->user()),
                 'accessToken' => $accessToken,
             ];
 
