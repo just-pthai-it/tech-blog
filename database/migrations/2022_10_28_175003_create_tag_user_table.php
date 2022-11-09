@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('hashtag_user', function (Blueprint $table) {
+        Schema::create('tag_user', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->unsignedTinyInteger('hashtag_id');
+            $table->unsignedTinyInteger('tag_id');
             $table->unsignedMediumInteger('user_id');
             $table->unsignedSmallInteger('search_count');
+            $table->foreign('tag_id')->references('id')->on('tags');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

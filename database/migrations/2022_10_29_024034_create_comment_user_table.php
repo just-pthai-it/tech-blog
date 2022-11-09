@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('comment_user', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->string('name', 100);
-            $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->unsignedMediumInteger('comment_id')->autoIncrement();
+            $table->unsignedMediumInteger('user_id')->autoIncrement();
+            $table->boolean('is_like')->default(0);
+            $table->foreign('comment_id')->references('id')->on('comments');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

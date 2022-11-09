@@ -15,9 +15,14 @@ return new class extends Migration
     {
         Schema::create('post_user', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->string('name', 100);
-            $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->unsignedMediumInteger('post_id')->autoIncrement();
+            $table->unsignedMediumInteger('user_id')->autoIncrement();
+            $table->boolean('is_like')->default(0);
+            $table->boolean('is_share')->default(0);
+            $table->boolean('is_save')->default(0);
+            $table->unsignedTinyInteger('search_count')->default(0);
+            $table->foreign('post_id')->references('id')->on('posts');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

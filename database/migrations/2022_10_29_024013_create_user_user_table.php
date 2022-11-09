@@ -16,8 +16,9 @@ return new class extends Migration
         Schema::create('user_user', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
             $table->string('name', 100);
-            $table->timestamps();
-            $table->timestamp('deleted_at')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users');
+
         });
     }
 

@@ -15,20 +15,24 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table)
         {
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->string('name', 100);
+            $table->string('name', 100)->nullable();
             $table->string('nickname', 50)->unique();
             $table->string('password', 200)->nullable();
-            $table->string('email', 100)->unique();
+            $table->string('email', 200)->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->date('birth')->nullable();
             $table->boolean('gender')->nullable();
+            $table->text('bio')->nullable();
+            $table->text('work')->nullable();
+            $table->text('education')->nullable();
+            $table->text('coding_skills')->nullable();
             $table->unsignedTinyInteger('role')->default(1);
             $table->unsignedSmallInteger('follower_count')->default(0);
             $table->unsignedSmallInteger('following_count')->default(0);
             $table->unsignedMediumInteger('trending_point')->default(0);
-            $table->string('github', 200)->nullable();
-            $table->string('facebook', 200)->nullable();
-            $table->string('google', 200)->nullable();
+            $table->string('github_email', 200)->nullable()->unique();
+            $table->string('facebook_email', 200)->nullable()->unique();
+            $table->string('google_email', 200)->nullable()->unique();
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
         });
