@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('comment_user', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->unsignedMediumInteger('comment_id')->autoIncrement();
-            $table->unsignedMediumInteger('user_id')->autoIncrement();
+            $table->unsignedMediumInteger('comment_id');
+            $table->unsignedMediumInteger('user_id');
             $table->boolean('is_like')->default(0);
             $table->foreign('comment_id')->references('id')->on('comments');
             $table->foreign('user_id')->references('id')->on('users');

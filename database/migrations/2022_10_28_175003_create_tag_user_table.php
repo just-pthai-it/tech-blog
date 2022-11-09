@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hashtag_user');
+        Schema::dropIfExists('tag_user');
     }
 };

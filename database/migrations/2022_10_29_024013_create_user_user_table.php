@@ -15,9 +15,10 @@ return new class extends Migration
     {
         Schema::create('user_user', function (Blueprint $table) {
             $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->string('name', 100);
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedMediumInteger('follower');
+            $table->unsignedMediumInteger('following');
+            $table->foreign('follower')->references('id')->on('users');
+            $table->foreign('following')->references('id')->on('users');
 
         });
     }
