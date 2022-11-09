@@ -7,7 +7,9 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use function App\Helpers\failedResponse;
+use const App\Helpers\HTTP_STATUS_CODE_NOT_FOUND;
 use const App\Helpers\HTTP_STATUS_CODE_BAD_REQUEST;
 use const App\Helpers\HTTP_STATUS_CODE_UNAUTHORIZED;
 use const App\Helpers\HTTP_STATUS_CODE_UNAUTHENTICATED;
@@ -60,6 +62,11 @@ class Handler extends ExceptionHandler
         $this->renderable(function (AuthorizationException $exception)
         {
             return failedResponse([], $exception->getMessage(), HTTP_STATUS_CODE_UNAUTHORIZED);
+        });
+
+        $this->renderable(function (NotFoundHttpException $exception)
+        {
+            return failedResponse([], 'Not found http', HTTP_STATUS_CODE_NOT_FOUND);
         });
 
         $this->renderable(function (Throwable $exception)

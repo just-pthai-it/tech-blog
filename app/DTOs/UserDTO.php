@@ -10,13 +10,13 @@ class UserDTO
     public function formatLogin (User|Authenticatable $user) : array
     {
         return [
-            'id'             => $user->id,
-            'name'           => $user->name,
-            'nickname'       => $user->nickname,
-            'email'          => $user->email,
-            'githubEmail'    => $user->github_email,
-            'facebookEmail'  => $user->facebook_email,
-            'googleEmail'    => $user->google_email,
+            'id'            => $user->id,
+            'name'          => $user->name,
+            'nickname'      => $user->nickname,
+            'email'         => $user->email,
+            'githubEmail'   => $user->github_email,
+            'facebookEmail' => $user->facebook_email,
+            'googleEmail'   => $user->google_email,
         ];
     }
 
@@ -34,6 +34,7 @@ class UserDTO
             'codingSkills'   => $user->coding_skills,
             'followerCount'  => $user->follower_count,
             'followingCount' => $user->following_count,
+            'createdAt'      => $user->created_at,
         ];
     }
 

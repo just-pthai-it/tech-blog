@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserPostController;
 use const App\Helpers\ALLOWED_THIRD_PARTY;
 
 /*
@@ -39,7 +40,8 @@ Route::group(['middleware' => ['default.headers']], function ()
     });
 
     Route::get('me', [UserController::class, 'show'])->name('me');
-    Route::get('users/{user}/verify', [UserController::class, 'verify']);
+
+    Route::patch('users/{user}/posts/{post}/like', [UserPostController::class, 'like'])->middleware(['auth:sanctum']);
 
     Route::apiResource('posts', PostController::class);
     Route::apiResource('users', UserController::class);

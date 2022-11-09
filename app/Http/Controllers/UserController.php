@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\User;
-use App\Models\Post;
 use App\DTOs\UserDTO;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -28,18 +27,12 @@ class UserController extends Controller
     {
         $this->userDTO = $userDTO;
 
-        $this->middleware(['auth:sanctum'])->only('update', 'destroy', 'verify');
+        $this->middleware(['auth:sanctum'])->only('update', 'destroy');
 
-        if (request()->route()->getName() == 'me')
+        if (optional(request()->route())->getName() == 'me')
         {
             $this->middleware(['auth:sanctum'])->only(['show']);
         }
-    }
-
-    public function verify (Request $request, int $id) : Response|Application|ResponseFactory
-    {
-        $code = auth()->user()->name == null ? HTTP_STATUS_CODE_REDIRECT : HTTP_STATUS_CODE_OK;
-        return successfulResponse([], '', $code);
     }
 
     /**

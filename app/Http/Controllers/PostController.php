@@ -7,7 +7,10 @@ use App\Models\Post;
 use App\DTOs\PostDTO;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Resources\Post\PostListResource;
+use Illuminate\Contracts\Foundation\Application;
 use App\Http\Requests\Post\CreatePostPostRequest;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use App\Http\Requests\Post\UpdatePostPatchRequest;
 use function App\Helpers\failedResponse;
 use function App\Helpers\successfulResponse;
@@ -26,15 +29,31 @@ class PostController extends Controller
         $this->postDTO = $postDTO;
 
         $this->middleware(['auth:sanctum'])->only(['store', 'update', 'destroy']);
+        if (request()->header('Authorization') != null)
+        {
+            $this->middleware(['auth:sanctum'])->only(['index', 'show']);
+        }
     }
 
     /**
      * Display a listing of the resource.
-     * @return Response
+     * @return Application|ResponseFactory|Response
      */
     public function index ()
     {
-        //
+        if (auth()->user() == null)
+        {
+            $result = Post::latest()->with(['user'])->paginate(25);
+        }
+        else
+        {
+            $result = Post::latest()->with(['users' => function ($query)
+            {
+                $query->where('user_id', auth()->user()->id);
+            }, 'user'])->paginate(25);
+        }
+
+        return successfulResponse(PostListResource::collection($result)->all());
     }
 
     /**
@@ -65,7 +84,7 @@ class PostController extends Controller
 
         if ($post != null)
         {
-            return successfulResponse($this->postDTO->format($post));
+            return successfulResponse($this->postDTO->formatGet($post));
         }
 
         return failedResponse([], 'Not Found', HTTP_STATUS_CODE_NOT_FOUND);
