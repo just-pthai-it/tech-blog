@@ -24,14 +24,14 @@ class UpdateUserPatchRequest extends FormRequest
     public function rules () : array
     {
         return [
-            'nickname'      => ['required', 'string', 'unique:users'],
-            'name'          => ['required', 'string'],
-            'birth'         => ['sometimes', 'required', 'string'],
-            'gender'        => ['sometimes', 'required', 'boolean'],
-            'bio'           => ['sometimes', 'required', 'string'],
-            'work'          => ['sometimes', 'required', 'string'],
-            'education'     => ['sometimes', 'required', 'string'],
-            'coding_skills' => ['sometimes', 'required', 'string'],
+            'nickname'      => ['sometimes', 'required', 'string', 'unique:users'],
+            'name'          => ['sometimes', 'required', 'string'],
+            'birth'         => ['sometimes', 'present', 'string'],
+            'gender'        => ['sometimes', 'present', 'boolean'],
+            'bio'           => ['sometimes', 'present', 'string'],
+            'work'          => ['sometimes', 'present', 'string'],
+            'education'     => ['sometimes', 'present', 'string'],
+            'coding_skills' => ['sometimes', 'present', 'string'],
         ];
     }
 }
