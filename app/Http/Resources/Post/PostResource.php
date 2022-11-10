@@ -14,22 +14,22 @@ class PostResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  Request  $request
+     * @param Request $request
      *
      * @return array|Arrayable|JsonSerializable
      */
-    public function toArray($request) : array|JsonSerializable|Arrayable
+    public function toArray ($request) : array|JsonSerializable|Arrayable
     {
         return [
-            'title'      => $this->title,
-            'content'    => $this->content,
-            'viewCount'  => $this->view_count,
-            'likeCount'  => $this->like_count,
-            'shareCount' => $this->share_count,
-            'user'       => new UserAuthorResource($this->user),
+            'title'           => $this->title,
+            'content'         => $this->content,
+            'viewCount'       => $this->view_count,
+            'likeCount'       => $this->like_count,
+            'shareCount'      => $this->share_count,
+            'user'            => new UserAuthorResource($this->user),
             'userInteraction' => $this->relationLoaded('users') ? new UserInteractionResource(optional($this->users)[0]) : null,
-            'createdAt'  => $this->created_at,
-            'updatedAt'  => $this->update_at,
+            'createdAt'       => $this->created_at,
+            'updatedAt'       => $this->update_at,
         ];
     }
 }
