@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('github_email', 200)->nullable()->unique();
             $table->string('facebook_email', 200)->nullable()->unique();
             $table->string('google_email', 200)->nullable()->unique();
+            $table->boolean('is_change_nickname')->default(0);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
         });

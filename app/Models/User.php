@@ -36,6 +36,7 @@ class User extends Authenticatable
         'github_email',
         'facebook_email',
         'google_email',
+        'is_change_nickname',
         'created_at',
         'update_at',
         'deleted_at',

@@ -88,15 +88,21 @@ class UserController extends Controller
      */
     public function update (UpdateUserPatchRequest $request, int $id) : Response
     {
-        try
+        $inputs = $request->validated();
+        if ($request->has('nickname'))
         {
-            auth()->user()->update($request->validated());
-            return successfulResponse();
+            if (auth()->user()->is_change_nickname)
+            {
+                unset($inputs['nickname']);
+            }
+            else
+            {
+                $inputs['is_change_nickname'] = 1;
+            }
         }
-        catch (Exception $exception)
-        {
-            return failedResponse([], 'Not found', HTTP_STATUS_CODE_NOT_FOUND);
-        }
+
+        auth()->user()->update($inputs);
+        return successfulResponse();
     }
 
     /**
