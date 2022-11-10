@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\DTOs\PostDTO;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Post\PostListResource;
 use Illuminate\Contracts\Foundation\Application;
 use App\Http\Requests\Post\CreatePostPostRequest;
@@ -39,7 +40,7 @@ class PostController extends Controller
      * Display a listing of the resource.
      * @return Application|ResponseFactory|Response
      */
-    public function index ()
+    public function index () : Response|Application|ResponseFactory
     {
         if (auth()->user() == null)
         {
@@ -77,17 +78,27 @@ class PostController extends Controller
      *
      * @return Response
      */
-    public function show (Request $request, int $id) : Response
+    public function show (Request $request, int $id)
     {
-
-        $post = Post::where([['id', $id], ['mode', 1]])->first();
-
-        if ($post != null)
+        if (auth()->user() == null)
         {
-            return successfulResponse($this->postDTO->formatGet($post));
+            $post = Post::where([['id', $id], ['mode', 1]])->first();
+        }
+        else
+        {
+            $post = Post::where([['id', $id], ['mode', 1]])
+                        ->with(['users' => function ($query)
+                        {
+                            $query->where('user_id', auth()->user()->id);
+                        }])->first();
         }
 
-        return failedResponse([], 'Not Found', HTTP_STATUS_CODE_NOT_FOUND);
+        if ($post == null)
+        {
+            return failedResponse([], 'Not Found', HTTP_STATUS_CODE_NOT_FOUND);
+        }
+
+        return successfulResponse((new PostResource($post)));
     }
 
     /**

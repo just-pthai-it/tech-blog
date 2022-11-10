@@ -3,7 +3,9 @@
 namespace App\Helpers;
 
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Contracts\Routing\ResponseFactory;
 
 const RESPONSE_STATUS_SUCCESSFUL = 1;
@@ -19,7 +21,7 @@ const HTTP_STATUS_CODE_NOT_FOUND       = 404;
 const HTTP_STATUS_CODE_UNPROCESSABLE   = 422;
 const HTTP_STATUS_CODE_SYSTEM_ERROR    = 500;
 
-function successfulResponse (array $data = [], string $message = '',
+function successfulResponse (array|Collection|JsonResource $data = [], string $message = '',
                              int   $httpStatusCode = HTTP_STATUS_CODE_OK,
                              array $additional = []) : Response|Application|ResponseFactory
 {
@@ -51,22 +53,4 @@ function failedResponse (array $errors = [], string $message = '',
     );
 
     return response($response, HTTP_STATUS_CODE_UNPROCESSABLE);
-}
-
-
-function tempSuccessfulResponse ($data, string $message = '',
-                             int   $httpStatusCode = HTTP_STATUS_CODE_OK,
-                             array $additional = []) : Response|Application|ResponseFactory
-{
-    $response = array_merge_recursive(
-        [
-            'status'  => RESPONSE_STATUS_SUCCESSFUL,
-            'code'    => $httpStatusCode,
-            'message' => empty($message) ? 'Successful' : $message,
-        ],
-        $data,
-        $additional
-    );
-
-    return response($response, HTTP_STATUS_CODE_OK);
 }
