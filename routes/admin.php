@@ -23,13 +23,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request)
 
 Route::group(['middleware' => ['default.headers'], 'as' => 'admin'], function ()
 {
-    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('admin.login');
 });
 
 Route::group(['middleware' => ['default.headers', 'auth:sanctum']], function ()
 {
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('logout/all', [AuthController::class, 'logoutAll'])->name('logout_all');
+    Route::post('logout', [AuthController::class, 'logout'])->name('admin.logout');
+    Route::post('logout/all', [AuthController::class, 'logoutAll'])->name('admin.logout_all');
 
     //    Route::apiResource('posts', PostController::class);
 });
