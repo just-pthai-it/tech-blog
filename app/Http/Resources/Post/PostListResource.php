@@ -26,7 +26,7 @@ class PostListResource extends JsonResource
             'likeCount'       => $this->like_count,
             'shareCount'      => $this->share_count,
             'user'            => new UserAuthorResource($this->user),
-            'userInteraction' => new UserInteractionResource(optional($this->users)[0]),
+            'userInteraction' => $this->relationLoaded('users') ? new UserInteractionResource(optional($this->users)[0]) : null,
             'createdAt'       => $this->created_at,
             'updatedAt'       => $this->update_at,
         ];
